@@ -28,19 +28,17 @@ def init(app: FastAPI) -> None:
                 ui.label('This is the subscriber tab')
                 with ui.grid(columns=2):
                     ui.label('Name:')
-                    sub = datamodel.subscribers['su0112330']['subscriber_id']
+                    sub = datamodel.subscribers['su0112330']['first_name']
                     ui.label(sub)
 
                     ui.label('products:')
-                    label = ui.label()
-                    ui.timer(1.0, lambda: label.set_text(datamodel.subscribers['su0112330']['products'][0]['product_id']))
-
-                    ui.label('Devices:')
-                    ui.label(datamodel.devices['su0112330']['model'])
-                    ui.label('Serial:')
-                    ui.label(datamodel.devices['su0112330']['serial'])
-                    ui.timer(1.0, lambda: label.set_text(datamodel.devices['su0112330']['serial']))
-
+                    product = ui.label()
+                    ui.timer(1.0, lambda: product.set_text(datamodel.subscribers['su0112330']['products'][0]['product_id']))
+                    
+                    ui.label('model:')
+                    model = ui.label()
+                    ui.timer(1.0, lambda: model.set_text(datamodel.devices['su0112330']['model']))
+                    
     # @ui.page('/graph')
     # def some_graph():
     #     with ui.pyplot(figsize=(10, 5)):
