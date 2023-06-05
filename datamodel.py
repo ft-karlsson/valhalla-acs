@@ -60,14 +60,3 @@ subscribers = ThreadSafeDictionary()
 
 # Start consuming messages from Kafka and update the dictionary
 loop.create_task(consume_from_kafka(KAFKA_TOPIC, subscribers))
-
-# TODO: FOR TEST. REMOVE THIS
-# Create another instance of the thread-safe dictionary to consume graphs
-# graphtest = ThreadSafeDictionary('graph_test', ['localhost:9092'])
-
-# # Create another instance with topology
-# topology = ThreadSafeDictionary('acs_topology', ['localhost:9092'])
-
-# # Create another instance of the thread-safe dictionary with Kafka consumer
-# devices = ThreadSafeDictionary('acs_devices', ['localhost:9092'])
-
