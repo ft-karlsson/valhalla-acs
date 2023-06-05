@@ -13,8 +13,11 @@ KAFKA_BOOTSTRAP_SERVERS = os.getenv('KAFKA_BOOTSTRAP_SERVERS', 'localhost:9092')
 # Global variables
 sub_loop = asyncio.get_event_loop()
 dev_loop = asyncio.get_event_loop()
+dp_loop = asyncio.get_event_loop()
+
 consumer1 = AIOKafkaConsumer("acs_subscribers", loop=sub_loop, bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS, auto_offset_reset='earliest')
 consumer2 = AIOKafkaConsumer("acs_devices", loop=dev_loop, bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS, auto_offset_reset='earliest')
+consumer3 = AIOKafkaConsumer("acs_device_policies", loop=dev_loop, bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS, auto_offset_reset='earliest')
 
 
 class ThreadSafeDictionary:
@@ -51,7 +54,7 @@ async def consume_from_kafka(consumer, dictionary, topic):
         async for msg in consumer:
             some_key = msg.key.decode('utf-8')
             some_data = msg.value.decode('utf-8')
-            logger.info(f"Got new message for topic '{topic}' with key: {some_key}")
+            print(f"Got new message for topic '{topic}' with key: {some_key}")
             d = json.loads(some_data)
             async with dictionary._lock:
                 dictionary._dictionary[some_key] = d
@@ -62,8 +65,10 @@ async def consume_from_kafka(consumer, dictionary, topic):
 # Create instances of the thread-safe dictionary
 subscribers = ThreadSafeDictionary()
 devices = ThreadSafeDictionary()
+policies = ThreadSafeDictionary()
 
 
 # Start consuming messages from Kafka and update the dictionaries
 sub_loop.create_task(consume_from_kafka(consumer1, subscribers, "acs_subscribers"))
 dev_loop.create_task(consume_from_kafka(consumer2, devices, "acs_devices"))
+dp_loop.create_task(consume_from_kafka(consumer3, policies, "acs_device_policies"))
