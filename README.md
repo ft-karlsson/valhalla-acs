@@ -6,7 +6,20 @@
 ## running locally
 ```python3 -m venv venv```
 
+### create virtual env so not to disturb system python
 ```source source/bin/activate```
+
+### install dependencies
+```pip install -r requirements.txt```
+
+### start the application using uvicorn as http server
+```uvicorn main:app --reload --log-level debug --port 8000```
+
+### note on graphviz:
+Installation may vary on os - see docs for detailed instructions: https://pygraphviz.github.io/documentation/stable/install.html
+
+
+
 
 
 ## TODO:
