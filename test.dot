@@ -1,0 +1,10 @@
+strict digraph "" {
+	CENTRAL -> CMC1;
+	CENTRAL -> CMC2;
+	CMC1 -> HF1001;
+	CMC2 -> HF2001;
+	CMC2 -> HF2002;
+	HF1001 -> Anlaeg1001;
+	HF2001 -> Anlaeg2001;
+	HF2001 -> Anlaeg2002;
+}

@@ -55,9 +55,12 @@ async def consume_from_kafka(consumer, dictionary, topic):
             some_key = msg.key.decode('utf-8')
             some_data = msg.value.decode('utf-8')
             print(f"Got new message for topic '{topic}' with key: {some_key}")
-            d = json.loads(some_data)
-            async with dictionary._lock:
-                dictionary._dictionary[some_key] = d
+            try:
+                d = json.loads(some_data)
+                async with dictionary._lock:
+                    dictionary._dictionary[some_key] = d
+            except json.JSONDecodeError as e:
+                print(f"Decode error on message with key: {some_key}: {e}")
     finally:
         await consumer.stop()
 

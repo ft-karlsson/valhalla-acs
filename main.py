@@ -10,17 +10,23 @@ from nicegui import ui
 app = FastAPI()
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+# @app.get("/")
+# async def root():
+#     return {"message": "Hello World"}
 
-
+# TODO: rm this (for debugging data)
 @app.get("/subscribers")
 async def get_subscribers():
     return dict(datamodel.subscribers.items())
+
+# TODO: rm this (for debugging data)
 @app.get("/devices")
 async def get_subscribers():
     return dict(datamodel.devices.items())
+
+@app.get("/deviceapi")
+async def get_subscribers():
+    return "this is API for devices"
 
 frontend.init(app)
 
