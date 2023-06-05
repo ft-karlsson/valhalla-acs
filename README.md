@@ -10,11 +10,16 @@
 
 
 ## TODO:
-
+### need to have: 
 - [x] add datamodel
 - [x] add frontend
 - [x] add async main
-- [ ] fix logging instead of prints
-- [ ] build device_api() as receiver
 - [ ] dynamic graph from kafka/topology
+- [ ] build device_api() as receiver
 - [ ] build policy/rules engine prototype
+
+### nice to have:
+- [ ] add kafka setup 
+- [ ] fix logging instead of prints
+- [ ] add docker/podman build
+- [ ] add docker podman compose build
