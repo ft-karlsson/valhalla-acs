@@ -1,30 +1,33 @@
-#!/usr/bin/env python3
-import frontend
-import networkx as nx
-from matplotlib import pyplot as plt
+from random import randint
 from fastapi import FastAPI
+import uvicorn
+import frontend
 import datamodel
-
 from nicegui import ui
-
+# Instantiate the API
 app = FastAPI()
 
 
 @app.on_event("startup")
-def run_subscriber_topic():
-    datamodel.subscribers
+async def startup_event():
+    await datamodel.consumer.start()
 
 
-@app.get('/')
-def read_root():
-    return {'Hello': 'World'}
+@app.on_event("shutdown")
+async def shutdown_event():
+    await datamodel.consumer.stop()
 
-# TODO: FOR TEST. REMOVE THIS!!
-@app.get('/test')
-def show_dict():
-    return {datamodel.subscribers}
+
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
+
+
+@app.get("/subscribers")
+async def get_subscribers():
+    return dict(datamodel.subscribers.items())
 
 frontend.init(app)
 
-if __name__ == '__main__':
-    print('Please start the app with the "uvicorn" command as shown in the start.sh script')
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)

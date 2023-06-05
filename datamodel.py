@@ -1,68 +1,73 @@
-import threading
+import asyncio
 import json
-import time
+import os
 
-from kafka import KafkaConsumer
+from aiokafka import AIOKafkaConsumer
 
-# TODO: create typed parser 
-## define the generic datamodel class to consume persisten storage from kafka
+# Environment variables
+KAFKA_TOPIC = "acs_subscribers"
+KAFKA_BOOTSTRAP_SERVERS = os.getenv('KAFKA_BOOTSTRAP_SERVERS', 'localhost:9092')
+
+# Global variables
+loop = asyncio.get_event_loop()
+consumer = AIOKafkaConsumer(KAFKA_TOPIC, loop=loop, bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS, auto_offset_reset='earliest')
+
+
 class ThreadSafeDictionary:
-    def __init__(self, topic, bootstrap_servers, auto_offset_reset='earliest'):
-        self._lock = threading.Lock()
+    def __init__(self):
+        self._lock = asyncio.Lock()
         self._dictionary = {}
-        self._consumer_thread = threading.Thread(target=self._consume_from_kafka, args=(topic, bootstrap_servers, auto_offset_reset))
-        self._consumer_thread.start()
 
     def __getitem__(self, key):
-        with self._lock:
-            return self._dictionary[key]
+        return self._dictionary[key]
 
     def __setitem__(self, key, value):
-        with self._lock:
-            self._dictionary[key] = value
+        self._dictionary[key] = value
 
     def __delitem__(self, key):
-        with self._lock:
-            del self._dictionary[key]
+        del self._dictionary[key]
 
     def __len__(self):
-        with self._lock:
-            return len(self._dictionary)
+        return len(self._dictionary)
 
     def keys(self):
-        with self._lock:
-            return self._dictionary.keys()
+        return self._dictionary.keys()
 
     def values(self):
-        with self._lock:
-            return self._dictionary.values()
+        return self._dictionary.values()
 
     def items(self):
-        with self._lock:
-            return self._dictionary.items()
+        return self._dictionary.items()
 
-    def _consume_from_kafka(self, topic, bootstrap_servers, auto_offset_reset='earliest'):
-        consumer = KafkaConsumer(topic, bootstrap_servers=bootstrap_servers, auto_offset_reset=auto_offset_reset)
-        for message in consumer:
-            some_key = message.key.decode('utf-8')
-            some_data = message.value.decode('utf-8')
-            print(f"got new msg with key: {some_key}")
+
+async def consume_from_kafka(topic, dictionary):
+    await consumer.start()
+    try:
+        # Consume messages
+        async for msg in consumer:
+            some_key = msg.key.decode('utf-8')
+            some_data = msg.value.decode('utf-8')
+            print(f"Got new message with key: {some_key}")
             d = json.loads(some_data)
-            with self._lock:
-                self._dictionary.update({some_key: d})
+            async with dictionary._lock:
+                dictionary._dictionary[some_key] = d
+    finally:
+        await consumer.stop()
 
 
+# Create an instance of the thread-safe dictionary
+subscribers = ThreadSafeDictionary()
 
-# Create an instance of the thread-safe dictionary with Kafka consumer
-subscribers = ThreadSafeDictionary('acs_subscribers', ['localhost:9092'])
+# Start consuming messages from Kafka and update the dictionary
+loop.create_task(consume_from_kafka(KAFKA_TOPIC, subscribers))
 
 # TODO: FOR TEST. REMOVE THIS
 # Create another instance of the thread-safe dictionary to consume graphs
-graphtest = ThreadSafeDictionary('graph_test', ['localhost:9092'])
+# graphtest = ThreadSafeDictionary('graph_test', ['localhost:9092'])
 
-# Create another instance with topology
-topology = ThreadSafeDictionary('acs_topology', ['localhost:9092'])
+# # Create another instance with topology
+# topology = ThreadSafeDictionary('acs_topology', ['localhost:9092'])
 
-# Create another instance of the thread-safe dictionary with Kafka consumer
-devices = ThreadSafeDictionary('acs_devices', ['localhost:9092'])
+# # Create another instance of the thread-safe dictionary with Kafka consumer
+# devices = ThreadSafeDictionary('acs_devices', ['localhost:9092'])
 

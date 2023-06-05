@@ -1,0 +1,1 @@
+su0112330/{"first_name":"Frederik","last_name":"Karlsson","products":[{"product_id":6}],"subscriber_id":"su0112330","type":"consumer"}
