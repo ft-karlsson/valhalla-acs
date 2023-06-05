@@ -1,0 +1,1 @@
+su0112330/{"model":"routerv3","serial":"DM102012321124","subscriber_id":"su0112330","tech":"coax"}

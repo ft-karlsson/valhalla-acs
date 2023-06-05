@@ -35,8 +35,11 @@ def init(app: FastAPI) -> None:
                     label = ui.label()
                     ui.timer(1.0, lambda: label.set_text(datamodel.subscribers['su0112330']['products'][0]['product_id']))
 
-                    ui.label('Height:')
-                    ui.label('1.80m')
+                    ui.label('Devices:')
+                    ui.label(datamodel.devices['su0112330']['model'])
+                    ui.label('Serial:')
+                    ui.label(datamodel.devices['su0112330']['serial'])
+                    ui.timer(1.0, lambda: label.set_text(datamodel.devices['su0112330']['serial']))
 
     # @ui.page('/graph')
     # def some_graph():

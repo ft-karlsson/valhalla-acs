@@ -1,21 +1,13 @@
 from random import randint
 from fastapi import FastAPI
+from fastapi.logger import logger
 import uvicorn
 import frontend
 import datamodel
 from nicegui import ui
+
 # Instantiate the API
 app = FastAPI()
-
-
-@app.on_event("startup")
-async def startup_event():
-    await datamodel.consumer.start()
-
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    await datamodel.consumer.stop()
 
 
 @app.get("/")
@@ -26,6 +18,9 @@ async def root():
 @app.get("/subscribers")
 async def get_subscribers():
     return dict(datamodel.subscribers.items())
+@app.get("/devices")
+async def get_subscribers():
+    return dict(datamodel.devices.items())
 
 frontend.init(app)
 
