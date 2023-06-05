@@ -16,7 +16,7 @@
 ```uvicorn main:app --reload --log-level debug --port 8000```
 
 ### note on graphviz:
-Installation may vary on os - see docs for detailed instructions: https://pygraphviz.github.io/documentation/stable/install.html
+Installation may vary on OS - see docs for detailed instructions: https://pygraphviz.github.io/documentation/stable/install.html
 
 
 
