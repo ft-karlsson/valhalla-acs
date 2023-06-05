@@ -44,40 +44,26 @@ class ThreadSafeDictionary:
         return self._dictionary.items()
 
 
-async def consume_from_kafka_subscriber(subscribers):
-    await consumer1.start()
+async def consume_from_kafka(consumer, dictionary, topic):
+    await consumer.start()
     try:
         # Consume messages
-        async for msg in consumer1:
+        async for msg in consumer:
             some_key = msg.key.decode('utf-8')
             some_data = msg.value.decode('utf-8')
-            logger.info(f"Got new sub message with key: {some_key}")
+            logger.info(f"Got new message for topic '{topic}' with key: {some_key}")
             d = json.loads(some_data)
-            async with subscribers._lock:
-                subscribers._dictionary[some_key] = d
+            async with dictionary._lock:
+                dictionary._dictionary[some_key] = d
     finally:
-        await consumer1.stop()
-
-async def consume_from_kafka_devices(devices):
-    await consumer2.start()
-    try:
-        # Consume messages
-        async for msg in consumer2:
-            some_key = msg.key.decode('utf-8')
-            some_data = msg.value.decode('utf-8')
-            logger.info(f"Got new device message with key: {some_key}")
-            d = json.loads(some_data)
-            async with devices._lock:
-                devices._dictionary[some_key] = d
-    finally:
-        await consumer2.stop()
+        await consumer.stop()
 
 
-# Create an instance of the thread-safe dictionary
+# Create instances of the thread-safe dictionary
 subscribers = ThreadSafeDictionary()
-
 devices = ThreadSafeDictionary()
 
-# Start consuming messages from Kafka and update the dictionary
-sub_loop.create_task(consume_from_kafka_subscriber(subscribers))
-dev_loop.create_task(consume_from_kafka_devices(devices))
+
+# Start consuming messages from Kafka and update the dictionaries
+sub_loop.create_task(consume_from_kafka(consumer1, subscribers, "acs_subscribers"))
+dev_loop.create_task(consume_from_kafka(consumer2, devices, "acs_devices"))
