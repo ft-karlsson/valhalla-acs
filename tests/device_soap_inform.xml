@@ -1,4 +1,4 @@
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:cwmp="urn:dslforum-org:cwmp-1-0">
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cwmp="urn:dslforum-org:cwmp-1-0" xmlns:soap-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <soap:Header>
     <cwmp:ID soap:mustUnderstand="1">14</cwmp:ID>
   </soap:Header>
@@ -22,7 +22,7 @@
       <ParameterList soap-enc:arrayType="cwmp:ParameterValueStruct[8]">
         <ParameterValueStruct>
           <Name>Device.DeviceSummary</Name>
-          <Value xsi:type="xsd:string" />
+          <Value xsi:type="xsd:string">coaxdevice</Value>
         </ParameterValueStruct>
         <ParameterValueStruct>
           <Name>Device.DeviceInfo.HardwareVersion</Name>
@@ -34,7 +34,7 @@
         </ParameterValueStruct>
         <ParameterValueStruct>
           <Name>Device.DeviceInfo.ProvisioningCode</Name>
-          <Value xsi:type="xsd:string">DM1936018000231</Value>
+          <Value xsi:type="xsd:string">SE1936018000231</Value>
         </ParameterValueStruct>
         <ParameterValueStruct>
           <Name>Device.ManagementServer.ConnectionRequestURL</Name>

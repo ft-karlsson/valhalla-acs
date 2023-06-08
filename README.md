@@ -32,14 +32,18 @@ Installation may vary on OS - see docs for detailed instructions: https://pygrap
 
 
 ### run unittests
+```shell 
 python -m unittest discover -s tests -p "test_*.py"
+```
 
 
 ## TODO:
 ### need to have: 
+- [x] unittest
 - [x] add datamodel
 - [x] add frontend
 - [x] add async main
+- [x] add soap_parser
 - [ ] dynamic graph from kafka/topology
 - [ ] build device_api() as receiver
 - [ ] build policy/rules engine prototype
@@ -50,4 +54,4 @@ python -m unittest discover -s tests -p "test_*.py"
 - [ ] fix logging instead of prints
 - [ ] add docker/podman build
 - [ ] add docker podman compose build
-- [ ] unittest
+
