@@ -5,6 +5,7 @@
 
 
 ## running locally
+prerequisite: python 3.11.3 or higher
 
 
 ### create virtual env so not to disturb system python
