@@ -31,6 +31,9 @@ uvicorn main:app --reload --log-level debug --port 8000
 Installation may vary on OS - see docs for detailed instructions: https://pygraphviz.github.io/documentation/stable/install.html
 
 
+### run unittests
+python -m unittest discover -s tests -p "test_*.py"
+
 
 ## TODO:
 ### need to have: 
