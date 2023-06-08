@@ -1,6 +1,6 @@
 import unittest
 
-from soap_lib import parse_inform
+from cwmp_lib.soap import parse_inform
 
 class TestStringMethods(unittest.TestCase):
     def test_parse(self):
@@ -22,7 +22,6 @@ class TestStringMethods(unittest.TestCase):
 
         parsed_data = parse_inform(xml_string)
         self.assertEqual(parsed_data['parameters']['Device.DeviceInfo.SoftwareVersion'], "ROUTERV3_NICEVERSION-FW-RDK_2.2.2")
-
 
 if __name__ == '__main__':
     unittest.main()

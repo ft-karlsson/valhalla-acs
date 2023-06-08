@@ -37,6 +37,11 @@ python -m unittest discover -s tests -p "test_*.py"
 ```
 
 
+### mock boot events from devices
+```shell
+sh ./tests/mock_boot_event.sh
+```
+
 ## TODO:
 ### need to have: 
 - [x] unittest
@@ -44,13 +49,16 @@ python -m unittest discover -s tests -p "test_*.py"
 - [x] add frontend
 - [x] add async main
 - [x] add soap_parser
+
 - [ ] dynamic graph from kafka/topology
 - [ ] build device_api() as receiver
 - [ ] build policy/rules engine prototype
 - [ ] shellscript to mimick device inform message
 
 ### nice to have:
+- [ ] try to use custom decorator
 - [ ] add kafka setup 
+- [ ] create kafka topics if not present
 - [ ] fix logging instead of prints
 - [ ] add docker/podman build
 - [ ] add docker podman compose build

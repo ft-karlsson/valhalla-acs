@@ -1,11 +1,14 @@
 from random import randint
-from fastapi import FastAPI
+from fastapi import FastAPI, Body, HTTPException
 from fastapi.logger import logger
 import uvicorn
 import frontend
 import datamodel
 from nicegui import ui
+from typing import Union
 
+
+from cwmp_lib.soap import parse_inform
 # Instantiate the API
 app = FastAPI()
 
@@ -24,9 +27,14 @@ async def get_subscribers():
 async def get_subscribers():
     return dict(datamodel.devices.items())
 
-@app.get("/deviceapi")
-async def get_subscribers():
-    return "this is API for devices"
+@app.post("/deviceapi")
+def read_inform(inform_msg: str = Body(...)):
+    try:
+        inform = parse_inform(inform_msg)
+    except Exception:
+        raise HTTPException(status_code=400, detail="could not parse soap event")
+
+    return {"msg": inform}
 
 frontend.init(app)
 

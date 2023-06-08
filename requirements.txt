@@ -3,3 +3,4 @@ uvicorn==0.20.0
 nicegui==1.2.15
 pygraphviz==1.11
 matplotlib==3.7.1
+networkx==3.1

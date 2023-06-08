@@ -1,10 +1,20 @@
 from lxml import etree
 
+"""
+cwmp.soap
+~~~~~~~~~~~~~~~~~
+This module contains specific parsers for CWMP protocals and messages from devices. 
+CWMP - CPE WAN Management Protocol is a remote management protocal describe as TR-069 to communicate with devices over IP network. 
+"""
 
 
 def parse_inform(xml_string):
-    # Parse the SOAP XML
-    root = etree.fromstring(xml_string)
+    """ parse the inform messages as example """
+    # Parse the SOAP XML inform event
+    try:
+        root = etree.fromstring(xml_string)
+    except Exception as e:
+        raise ValueError(f"could not parse to soap:  {e}")
 
     # Define namespaces
     namespaces = {
