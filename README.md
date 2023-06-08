@@ -3,22 +3,31 @@
 
 ## Kafka as persistence
 
+
 ## running locally
-```python3 -m venv venv```
+
 
 ### create virtual env so not to disturb system python
-```source source/bin/activate```
+```shell
+python3 -m venv venv
+```
+
+```shell
+source venv/bin/activate
+```
 
 ### install dependencies
-```pip install -r requirements.txt```
+```shell
+pip install -r requirements.txt
+```
 
 ### start the application using uvicorn as http server
-```uvicorn main:app --reload --log-level debug --port 8000```
+```shell
+uvicorn main:app --reload --log-level debug --port 8000
+```
 
 ### note on graphviz:
 Installation may vary on OS - see docs for detailed instructions: https://pygraphviz.github.io/documentation/stable/install.html
-
-
 
 
 
@@ -30,9 +39,11 @@ Installation may vary on OS - see docs for detailed instructions: https://pygrap
 - [ ] dynamic graph from kafka/topology
 - [ ] build device_api() as receiver
 - [ ] build policy/rules engine prototype
+- [ ] shellscript to mimick device inform message
 
 ### nice to have:
 - [ ] add kafka setup 
 - [ ] fix logging instead of prints
 - [ ] add docker/podman build
 - [ ] add docker podman compose build
+- [ ] unittest
