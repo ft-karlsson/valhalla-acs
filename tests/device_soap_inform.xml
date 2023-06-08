@@ -1,0 +1,58 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:cwmp="urn:dslforum-org:cwmp-1-0">
+  <soap:Header>
+    <cwmp:ID soap:mustUnderstand="1">14</cwmp:ID>
+  </soap:Header>
+  <soap:Body>
+    <cwmp:Inform>
+      <DeviceId>
+        <Manufacturer>Techsome</Manufacturer>
+        <OUI>6C0E01</OUI>
+        <ProductClass>ROUTERV3</ProductClass>
+        <SerialNumber>SE1936018000231</SerialNumber>
+      </DeviceId>
+      <Event soap-enc:arrayType="cwmp:EventStruct[1]">
+        <EventStruct>
+          <EventCode>0 BOOTSTRAP</EventCode>
+          <CommandKey />
+        </EventStruct>
+      </Event>
+      <MaxEnvelopes>1</MaxEnvelopes>
+      <CurrentTime>2023-06-08T22:05:55+00:00</CurrentTime>
+      <RetryCount>13</RetryCount>
+      <ParameterList soap-enc:arrayType="cwmp:ParameterValueStruct[8]">
+        <ParameterValueStruct>
+          <Name>Device.DeviceSummary</Name>
+          <Value xsi:type="xsd:string" />
+        </ParameterValueStruct>
+        <ParameterValueStruct>
+          <Name>Device.DeviceInfo.HardwareVersion</Name>
+          <Value xsi:type="xsd:string">3.0</Value>
+        </ParameterValueStruct>
+        <ParameterValueStruct>
+          <Name>Device.DeviceInfo.SoftwareVersion</Name>
+          <Value xsi:type="xsd:string">ROUTERV3_NICEVERSION-FW-RDK_2.2.2</Value>
+        </ParameterValueStruct>
+        <ParameterValueStruct>
+          <Name>Device.DeviceInfo.ProvisioningCode</Name>
+          <Value xsi:type="xsd:string">DM1936018000231</Value>
+        </ParameterValueStruct>
+        <ParameterValueStruct>
+          <Name>Device.ManagementServer.ConnectionRequestURL</Name>
+          <Value xsi:type="xsd:string">http://10.0.0.8:7547/</Value>
+        </ParameterValueStruct>
+        <ParameterValueStruct>
+          <Name>Device.ManagementServer.ParameterKey</Name>
+          <Value xsi:type="xsd:string">1S4s32211235409811231566</Value>
+        </ParameterValueStruct>
+        <ParameterValueStruct>
+          <Name>Device.IP.Interface.1.IPv4Address.1.IPAddress</Name>
+          <Value xsi:type="xsd:string">10.0.1.8</Value>
+        </ParameterValueStruct>
+        <ParameterValueStruct>
+          <Name>Device.ManagementServer.AliasBasedAddressing</Name>
+          <Value xsi:type="xsd:boolean">0</Value>
+        </ParameterValueStruct>
+      </ParameterList>
+    </cwmp:Inform>
+  </soap:Body>
+</soap:Envelope>
