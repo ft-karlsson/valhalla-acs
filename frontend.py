@@ -5,6 +5,8 @@ from matplotlib import pyplot as plt
 import datamodel
 from nicegui import ui
 
+
+
 ## is to be the front-end part using nicegui
 def init(app: FastAPI) -> None:
     @ui.page('/')
@@ -24,8 +26,14 @@ def init(app: FastAPI) -> None:
                 ui.label('This is the second tab')
             with ui.tab_panel('Devices'):
                 ui.label('This is the devices tab')
-            with ui.tab_panel('Devices'):
-                ui.label('This is the devices tab')
+                ui.label('write some more')
+                with ui.grid(columns=2):
+                    ui.label('device:')
+                    device = ui.label()
+                    ui.timer(1.0, lambda: device.set_text(datamodel.devices['SE1936018000231']['manufacturer']))
+                    ui.label('serial:')
+                    serial = ui.label()
+                    ui.timer(1.0, lambda: serial.set_text(datamodel.devices['SE1936018000231']['serialnumber']))
             with ui.tab_panel('Subscribers'):
                 ui.label('This is the subscriber tab')
                 with ui.grid(columns=2):
@@ -40,6 +48,8 @@ def init(app: FastAPI) -> None:
                     ui.label('model:')
                     model = ui.label()
                     ui.timer(1.0, lambda: model.set_text(datamodel.devices['su0112330']['model']))
+                    ui.label('manufacturer:')
+                    manufacturer = datamodel.devices['SE1936018000231']['manufacturer']
             with ui.tab_panel('Policies'):
                 ui.label('This is the policies tab')
                     
