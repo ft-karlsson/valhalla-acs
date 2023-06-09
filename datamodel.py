@@ -1,24 +1,48 @@
 import asyncio
 import json
-import os
 import logging
+from aiokafka import AIOKafkaConsumer
 
 logger = logging.getLogger(__name__)
 
-from aiokafka import AIOKafkaConsumer
+class DataModelBuilder:
+    def __init__(self, kafka_bootstrap_servers, topic):
+        self.KAFKA_BOOTSTRAP_SERVERS = kafka_bootstrap_servers
+        self.topic = topic
+        self.consumer = None
+        self.dictionary = None
 
-# Environment variables
-KAFKA_BOOTSTRAP_SERVERS = os.getenv('KAFKA_BOOTSTRAP_SERVERS', 'localhost:9092')
+    def create_consumer(self, loop):
+        consumer = AIOKafkaConsumer(self.topic, loop=loop, bootstrap_servers=self.KAFKA_BOOTSTRAP_SERVERS, auto_offset_reset='earliest')
+        return consumer
 
-# Global variables
-sub_loop = asyncio.get_event_loop()
-dev_loop = asyncio.get_event_loop()
-dp_loop = asyncio.get_event_loop()
+    def create_thread_safe_dictionary(self):
+        return ThreadSafeDictionary()
 
-consumer1 = AIOKafkaConsumer("acs_subscribers", loop=sub_loop, bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS, auto_offset_reset='earliest')
-consumer2 = AIOKafkaConsumer("acs_devices", loop=dev_loop, bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS, auto_offset_reset='earliest')
-consumer3 = AIOKafkaConsumer("acs_device_policies", loop=dev_loop, bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS, auto_offset_reset='earliest')
+    async def consume_from_kafka(self, consumer, dictionary):
+        await consumer.start()
+        try:
+            # Consume messages
+            async for msg in consumer:
+                some_key = msg.key.decode('utf-8')
+                some_data = msg.value.decode('utf-8')
+                print(f"Got new message for topic '{self.topic}' with key: {some_key}")
+                try:
+                    d = json.loads(some_data)
+                    async with dictionary._lock:
+                        dictionary._dictionary[some_key] = d
+                except json.JSONDecodeError as e:
+                    print(f"Decode error on message with key: {some_key}: {e}")
+        finally:
+            await consumer.stop()
 
+    def build(self):
+        self.consumer = self.create_consumer(asyncio.get_event_loop())
+        self.dictionary = self.create_thread_safe_dictionary()
+
+        asyncio.get_event_loop().create_task(self.consume_from_kafka(self.consumer, self.dictionary))
+
+        return self.dictionary
 
 class ThreadSafeDictionary:
     def __init__(self):
@@ -47,26 +71,6 @@ class ThreadSafeDictionary:
         return self._dictionary.items()
 
 
-async def consume_from_kafka(consumer, dictionary, topic):
-    await consumer.start()
-    try:
-        # Consume messages
-        async for msg in consumer:
-            some_key = msg.key.decode('utf-8')
-            some_data = msg.value.decode('utf-8')
-            print(f"Got new message for topic '{topic}' with key: {some_key}")
-            try:
-                d = json.loads(some_data)
-                async with dictionary._lock:
-                    dictionary._dictionary[some_key] = d
-            except json.JSONDecodeError as e:
-                print(f"Decode error on message with key: {some_key}: {e}")
-    finally:
-        await consumer.stop()
-
-
-import aiokafka
-
 async def send_kafka_message(topic, data, key):
     ## TODO: Want to make the producer global when under production load so not to create producer instances on every request
     producer = aiokafka.AIOKafkaProducer(bootstrap_servers="localhost:9092", client_id="acs-server")
@@ -85,14 +89,6 @@ async def send_kafka_message(topic, data, key):
     finally:
         await producer.stop()
 
-
-# Create instances of the thread-safe dictionary
-subscribers = ThreadSafeDictionary()
-devices = ThreadSafeDictionary()
-policies = ThreadSafeDictionary()
-
-
-# Start consuming messages from Kafka and update the dictionaries
-sub_loop.create_task(consume_from_kafka(consumer1, subscribers, "acs_subscribers"))
-dev_loop.create_task(consume_from_kafka(consumer2, devices, "acs_devices"))
-dp_loop.create_task(consume_from_kafka(consumer3, policies, "acs_device_policies"))
+subscribers = DataModelBuilder("localhost:9092", "acs_subscribers").build()
+devices = DataModelBuilder("localhost:9092", "acs_devices").build()
+policies = DataModelBuilder("localhost:9092", "acs_device_policies").build()
