@@ -49,11 +49,11 @@ sh ./tests/mock_boot_event.sh
 - [x] add frontend
 - [x] add async main
 - [x] add soap_parser
-
+- [x] shellscript to mimick device inform message
+- [x] build device_api() as receiver
 - [ ] dynamic graph from kafka/topology
-- [ ] build device_api() as receiver
 - [ ] build policy/rules engine prototype
-- [ ] shellscript to mimick device inform message
+
 
 ### nice to have:
 - [ ] try to use custom decorator
