@@ -52,6 +52,7 @@ class DataModelBuilder:
                         try:
                             self.validator_func(d)  # Call the decorated validator function
                         except ValueError:
+                            print("skipping")
                             continue  # Skip the message if validation fails
                     async with dictionary._lock:
                         dictionary._dictionary[some_key] = d
@@ -104,6 +105,7 @@ def validate_logger(validator_func):
             validator_func(data)
         except ValueError as e:
             print(f"Validation error: {e}")
+            raise ValueError
     return decorator
 
 # Here are the specific validators using the decorator
