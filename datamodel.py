@@ -50,10 +50,9 @@ class DataModelBuilder:
                     d = json.loads(some_data)
                     if self.validator_func is not None:
                         try:
-                            self.validator_func(d)  # Validate the data using the provided validator function
-                        except ValueError as e:
-                            print(f"Validation error on {some_key}: {e}")
-                    # all checks out correct, so write data to dictionary
+                            self.validator_func(d)  # Call the decorated validator function
+                        except ValueError:
+                            continue  # Skip the message if validation fails
                     async with dictionary._lock:
                         dictionary._dictionary[some_key] = d
                 except json.JSONDecodeError as e:
@@ -98,19 +97,35 @@ class ThreadSafeDictionary:
     def items(self):
         return self._dictionary.items()
 
+# here define a custom decorator logging 
+def validate_logger(validator_func):
+    def decorator(data):
+        try:
+            validator_func(data)
+        except ValueError as e:
+            print(f"Validation error: {e}")
+    return decorator
 
+# Here are the specific validators using the decorator
+@validate_logger
 def device_validator(data):
     if "manufacturer" not in data:
-        raise ValueError("Invalid device data: missing 'manufacturer' field")
+        raise ValueError("missing 'manufacturer' field")
+    # TODO: add more validation
 
+
+@validate_logger
 def subscriber_validator(data):
     if "serialnumber" not in data:
-        raise ValueError("Invalid subscriber data: missing 'serialnumber' field")
+        raise ValueError("missing 'serialnumber' field")
 
+
+@validate_logger
 def policy_validator(data):
     pass
 
 
+# Instantiation of each part of the datamodel
 devices = DataModelBuilder("localhost:9092", "acs_devices", device_validator).build()
 subscribers = DataModelBuilder("localhost:9092", "acs_subscribers", subscriber_validator).build()
 policies = DataModelBuilder("localhost:9092", "acs_device_policies").build()
