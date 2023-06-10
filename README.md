@@ -52,7 +52,7 @@ sh ./tests/mock_boot_event.sh
 - [x] shellscript to mimick device inform message
 - [x] build device_api() as receiver
 - [x] use build pattern for datamodel
-- [x] use build pattern for datamodel
+- [ ] build datamodel validator class / decorator
 - [ ] dynamic graph from kafka/topology
 - [x] add search module for devices and subscribers ui
 - [ ] build policy/rules engine prototype

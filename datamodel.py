@@ -5,15 +5,34 @@ from aiokafka import AIOKafkaConsumer
 
 logger = logging.getLogger(__name__)
 
+
+"""
+datamodel
+~~~~~~~~~~~~~~~~~
+This module contains the classes that define our datamodels used for the ACS server
+"""
+
+
 class DataModelBuilder:
-    def __init__(self, kafka_bootstrap_servers, topic):
+    """DataModelBuilder class will create and async consumer tasks based on a givin kafka topic,
+    and keep it in sync with threadsafe dictionary type, the class instances itself can be used
+    just like a python dictionary for easy integration with frontend.
+    """
+
+    def __init__(self, kafka_bootstrap_servers, topic, validator_func=None):
         self.KAFKA_BOOTSTRAP_SERVERS = kafka_bootstrap_servers
         self.topic = topic
         self.consumer = None
         self.dictionary = None
+        self.validator_func = validator_func
 
     def create_consumer(self, loop):
-        consumer = AIOKafkaConsumer(self.topic, loop=loop, bootstrap_servers=self.KAFKA_BOOTSTRAP_SERVERS, auto_offset_reset='earliest')
+        consumer = AIOKafkaConsumer(
+            self.topic,
+            loop=loop,
+            bootstrap_servers=self.KAFKA_BOOTSTRAP_SERVERS,
+            auto_offset_reset="earliest",
+        )
         return consumer
 
     def create_thread_safe_dictionary(self):
@@ -24,11 +43,17 @@ class DataModelBuilder:
         try:
             # Consume messages
             async for msg in consumer:
-                some_key = msg.key.decode('utf-8')
-                some_data = msg.value.decode('utf-8')
+                some_key = msg.key.decode("utf-8")
+                some_data = msg.value.decode("utf-8")
                 print(f"Got new message for topic '{self.topic}' with key: {some_key}")
                 try:
                     d = json.loads(some_data)
+                    if self.validator_func is not None:
+                        try:
+                            self.validator_func(d)  # Validate the data using the provided validator function
+                        except ValueError as e:
+                            print(f"Validation error on {some_key}: {e}")
+                    # all checks out correct, so write data to dictionary
                     async with dictionary._lock:
                         dictionary._dictionary[some_key] = d
                 except json.JSONDecodeError as e:
@@ -40,9 +65,12 @@ class DataModelBuilder:
         self.consumer = self.create_consumer(asyncio.get_event_loop())
         self.dictionary = self.create_thread_safe_dictionary()
 
-        asyncio.get_event_loop().create_task(self.consume_from_kafka(self.consumer, self.dictionary))
+        asyncio.get_event_loop().create_task(
+            self.consume_from_kafka(self.consumer, self.dictionary)
+        )
 
         return self.dictionary
+
 
 class ThreadSafeDictionary:
     def __init__(self):
@@ -71,24 +99,18 @@ class ThreadSafeDictionary:
         return self._dictionary.items()
 
 
-async def send_kafka_message(topic, data, key):
-    ## TODO: Want to make the producer global when under production load so not to create producer instances on every request
-    producer = aiokafka.AIOKafkaProducer(bootstrap_servers="localhost:9092", client_id="acs-server")
-    await producer.start()
-    encoded_key = key.encode('utf-8')
-    encoded_value = json.dumps(data).encode('utf-8')
-    try:
-        d = json.dumps(data)
-    except TypeError:
-        print("could not parse to valid json")
-    try:
-        await producer.send_and_wait(topic,encoded_value, encoded_key)
-    except Exception as e:
-        raise Exception(f"could not produce message due to: {e}")
+def device_validator(data):
+    if "manufacturer" not in data:
+        raise ValueError("Invalid device data: missing 'manufacturer' field")
 
-    finally:
-        await producer.stop()
+def subscriber_validator(data):
+    if "serialnumber" not in data:
+        raise ValueError("Invalid subscriber data: missing 'serialnumber' field")
 
-subscribers = DataModelBuilder("localhost:9092", "acs_subscribers").build()
-devices = DataModelBuilder("localhost:9092", "acs_devices").build()
+def policy_validator(data):
+    pass
+
+
+devices = DataModelBuilder("localhost:9092", "acs_devices", device_validator).build()
+subscribers = DataModelBuilder("localhost:9092", "acs_subscribers", subscriber_validator).build()
 policies = DataModelBuilder("localhost:9092", "acs_device_policies").build()
