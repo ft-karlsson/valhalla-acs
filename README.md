@@ -49,20 +49,23 @@ sh ./tests/mock_boot_event.sh
 - [x] add frontend
 - [x] add async main
 - [x] add soap_parser
+- [x] add topology graph
 - [x] shellscript to mimick device inform message
 - [x] build device_api() as receiver
 - [x] use build pattern for datamodel
 - [x] build datamodel validator class / decorator
-- [ ] add search module for devices and subscribers ui
-- [ ] dynamic graph from kafka/topology
-- [ ] build policy/rules engine prototype
+- [x] add protype search module for devices using subscriber key
+
+
 
 
 ### nice to have:
 - [x] try to use custom decorator
 - [ ] fix logging instead of prints
+- [ ] add docker podman compose build
 - [ ] add kafka setup 
 - [ ] create kafka topics if not present
 - [ ] add docker/podman build
-- [ ] add docker podman compose build
+- [ ] topology graph persisted in kafka
+- [ ] build policy/rules engine prototype
 
