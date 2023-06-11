@@ -34,7 +34,7 @@ services:
         # volumes:
             # - ./kafka_app/consumer:/usr/src/app
         environment:
-            - KAFKA_HOSTS='kafka:9092'
+            - KAFKA_HOSTS=kafka:9092
         depends_on:
             - kafka
             - zookeeper
