@@ -1,4 +1,5 @@
 import asyncio
+import os
 import json
 import logging
 from aiokafka import AIOKafkaConsumer
@@ -131,9 +132,11 @@ def subscriber_validator(data):
 def policy_validator(data):
     pass
 
+# read kafka_hosts from environment variable
+kafka_server = os.getenv("KAFKA_HOSTS")
 
 # Instantiation of each part of the datamodel
-kafka_server = os.getenv("KAFKA_BROKERS")
+
 devices = DataModelBuilder(kafka_server, "acs_devices", device_validator).build()
 subscribers = DataModelBuilder(kafka_server, "acs_subscribers", subscriber_validator).build()
 policies = DataModelBuilder(kafka_server, "acs_device_policies").build()

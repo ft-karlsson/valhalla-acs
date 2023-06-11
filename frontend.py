@@ -80,7 +80,7 @@ def init(app: FastAPI) -> None:
 
 
                     
-    # @ui.page('/graph')
+    # @ui.page('/topology')
     # def some_graph():
     #     with ui.pyplot(figsize=(10, 5)):
     #         G = nx.DiGraph()
@@ -112,8 +112,8 @@ def init(app: FastAPI) -> None:
 
 
     #         ## TODO: adding customers
-    #         # G.add_edge("Anlaeg2001","su0112330")
-    #         # G.add_edge("Anlaeg1001","su0112332")
+    #         G.add_edge("Anlaeg2001","su0112330")
+    #         G.add_edge("Anlaeg1001","su0112332")
 
 
     #         # same layout using matplotlib with no labels
@@ -123,5 +123,3 @@ def init(app: FastAPI) -> None:
     # ui.timer(1.0, some_graph)
     # https://networkx.org/documentation/stable/auto_examples/drawing/plot_custom_node_icons.html#sphx-glr-auto-examples-drawing-plot-custom-node-icons-py
     ui.run_with(app)
-
-    
