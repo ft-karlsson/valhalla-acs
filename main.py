@@ -37,5 +37,5 @@ async def read_inform(inform_msg: str = Body(...)):
 
 frontend.init(app)
 
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+# if __name__ == "__main__":
+#     uvicorn.run(app, host="0.0.0.0", port=8000)

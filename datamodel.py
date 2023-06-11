@@ -133,6 +133,7 @@ def policy_validator(data):
 
 
 # Instantiation of each part of the datamodel
-devices = DataModelBuilder("localhost:9092", "acs_devices", device_validator).build()
-subscribers = DataModelBuilder("localhost:9092", "acs_subscribers", subscriber_validator).build()
-policies = DataModelBuilder("localhost:9092", "acs_device_policies").build()
+kafka_server = os.getenv("KAFKA_BROKERS")
+devices = DataModelBuilder(kafka_server, "acs_devices", device_validator).build()
+subscribers = DataModelBuilder(kafka_server, "acs_subscribers", subscriber_validator).build()
+policies = DataModelBuilder(kafka_server, "acs_device_policies").build()

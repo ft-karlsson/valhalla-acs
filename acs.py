@@ -7,7 +7,7 @@ This module contains specific functions specific to "auto-configuration of devic
 
 async def send_kafka_message(topic, data, key):
     ## TODO: Want to make the producer global when under production load so not to create producer instances on every request
-    producer = aiokafka.AIOKafkaProducer(bootstrap_servers="localhost:9092", client_id="acs-server")
+    producer = aiokafka.AIOKafkaProducer(bootstrap_servers="192.168.1.21:9092", client_id="acs-server")
     await producer.start()
     encoded_key = key.encode('utf-8')
     encoded_value = json.dumps(data).encode('utf-8')

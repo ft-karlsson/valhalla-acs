@@ -1,7 +1,4 @@
 from fastapi import FastAPI
-import networkx as nx
-from networkx.drawing.nx_agraph import graphviz_layout
-from matplotlib import pyplot as plt
 import datamodel
 from nicegui import ui
 
@@ -83,46 +80,46 @@ def init(app: FastAPI) -> None:
 
 
                     
-    @ui.page('/graph')
-    def some_graph():
-        with ui.pyplot(figsize=(10, 5)):
-            G = nx.DiGraph()
-            G.add_node("CENTRAL")
-            nodes = ['CMC1','CMC2','HF1001','HF2001']
-            # G.add_node("CMC1")
-            # G.add_node("CMC2")
-            # G.add_node("HF1001")
-            # G.add_node("HF2001")
-            for n in nodes:
-                G.add_node(n)
+    # @ui.page('/graph')
+    # def some_graph():
+    #     with ui.pyplot(figsize=(10, 5)):
+    #         G = nx.DiGraph()
+    #         G.add_node("CENTRAL")
+    #         nodes = ['CMC1','CMC2','HF1001','HF2001']
+    #         # G.add_node("CMC1")
+    #         # G.add_node("CMC2")
+    #         # G.add_node("HF1001")
+    #         # G.add_node("HF2001")
+    #         for n in nodes:
+    #             G.add_node(n)
 
-            # G.add_node("su0112330")
-            # G.add_node("su0112332")
+    #         # G.add_node("su0112330")
+    #         # G.add_node("su0112332")
 
-            edges = [{"CENTRAL":"CMC1"},{"CENTRAL" : "CMC2"}]
+    #         edges = [{"CENTRAL":"CMC1"},{"CENTRAL" : "CMC2"}]
 
-            # G.add_edge("CENTRAL", "CMC1")
-            # G.add_edge("CENTRAL", "CMC2")
-            for e in edges:
-                for i in e.items():
-                    G.add_edge(i[0], i[1])
-            G.add_edge("CMC2", "HF2001")
-            G.add_edge("CMC2", "HF2002")
-            G.add_edge("CMC1", "HF1001")
-            G.add_edge("HF2001", "Anlaeg2001")
-            G.add_edge("HF2001", "Anlaeg2002")
-            G.add_edge("HF1001", "Anlaeg1001")
-
-
-            ## TODO: adding customers
-            # G.add_edge("Anlaeg2001","su0112330")
-            # G.add_edge("Anlaeg1001","su0112332")
+    #         # G.add_edge("CENTRAL", "CMC1")
+    #         # G.add_edge("CENTRAL", "CMC2")
+    #         for e in edges:
+    #             for i in e.items():
+    #                 G.add_edge(i[0], i[1])
+    #         G.add_edge("CMC2", "HF2001")
+    #         G.add_edge("CMC2", "HF2002")
+    #         G.add_edge("CMC1", "HF1001")
+    #         G.add_edge("HF2001", "Anlaeg2001")
+    #         G.add_edge("HF2001", "Anlaeg2002")
+    #         G.add_edge("HF1001", "Anlaeg1001")
 
 
-            # same layout using matplotlib with no labels
-            plt.title('draw_networkx')
-            pos=graphviz_layout(G, prog='dot')
-            nx.draw(G, pos, with_labels=True, arrows=True)
+    #         ## TODO: adding customers
+    #         # G.add_edge("Anlaeg2001","su0112330")
+    #         # G.add_edge("Anlaeg1001","su0112332")
+
+
+    #         # same layout using matplotlib with no labels
+    #         plt.title('draw_networkx')
+    #         pos=graphviz_layout(G, prog='dot')
+    #         nx.draw(G, pos, with_labels=True, arrows=True)
     # ui.timer(1.0, some_graph)
     # https://networkx.org/documentation/stable/auto_examples/drawing/plot_custom_node_icons.html#sphx-glr-auto-examples-drawing-plot-custom-node-icons-py
     ui.run_with(app)
