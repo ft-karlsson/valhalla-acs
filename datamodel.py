@@ -50,7 +50,9 @@ class DataModelBuilder:
                     d = json.loads(some_data)
                     if self.validator_func is not None:
                         try:
-                            self.validator_func(d)  # Call the decorated validator function
+                            self.validator_func(
+                                d
+                            )  # Call the decorated validator function
                         except ValueError:
                             print("skipping")
                             continue  # Skip the message if validation fails
@@ -101,7 +103,8 @@ class ThreadSafeDictionary:
     def get(self, key, default=None):
         return self._dictionary.get(key, default)
 
-# here define a custom decorator logging 
+
+# here define a custom decorator logging
 def validate_logger(validator_func):
     def decorator(data):
         try:
@@ -109,7 +112,9 @@ def validate_logger(validator_func):
         except ValueError as e:
             print(f"Validation error: {e}")
             raise ValueError
+
     return decorator
+
 
 # Here are the specific validators using the decorator
 @validate_logger
@@ -134,5 +139,7 @@ def policy_validator(data):
 
 # Instantiation of each part of the datamodel
 devices = DataModelBuilder("localhost:9092", "acs_devices", device_validator).build()
-subscribers = DataModelBuilder("localhost:9092", "acs_subscribers", subscriber_validator).build()
+subscribers = DataModelBuilder(
+    "localhost:9092", "acs_subscribers", subscriber_validator
+).build()
 policies = DataModelBuilder("localhost:9092", "acs_device_policies").build()
