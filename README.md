@@ -62,10 +62,10 @@ sh ./tests/mock_boot_event.sh
 ### nice to have:
 - [x] try to use custom decorator
 - [ ] fix logging instead of prints
-- [ ] add docker podman compose build
+- [x] add docker podman compose build
 - [ ] add kafka setup 
 - [ ] create kafka topics if not present
-- [ ] add docker/podman build
+- [x] add docker/podman build
 - [ ] topology graph persisted in kafka
 - [ ] build policy/rules engine prototype
 
