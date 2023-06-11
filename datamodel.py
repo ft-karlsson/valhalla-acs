@@ -98,6 +98,9 @@ class ThreadSafeDictionary:
     def items(self):
         return self._dictionary.items()
 
+    def get(self, key, default=None):
+        return self._dictionary.get(key, default)
+
 # here define a custom decorator logging 
 def validate_logger(validator_func):
     def decorator(data):
@@ -118,8 +121,10 @@ def device_validator(data):
 
 @validate_logger
 def subscriber_validator(data):
-    if "serialnumber" not in data:
-        raise ValueError("missing 'serialnumber' field")
+    if "devices" not in data:
+        raise ValueError("missing 'device' field")
+    if "products" not in data:
+        raise ValueError("missing 'prod' field")
 
 
 @validate_logger

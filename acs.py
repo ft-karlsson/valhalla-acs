@@ -1,7 +1,7 @@
 """
 acs
 ~~~~~~~~~~~~~~~~~
-This module contains specific functions for the auto-configuration for devices including ingestion of devices
+This module contains specific functions specific to "auto-configuration of devices"
 """
 
 

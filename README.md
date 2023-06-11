@@ -52,17 +52,17 @@ sh ./tests/mock_boot_event.sh
 - [x] shellscript to mimick device inform message
 - [x] build device_api() as receiver
 - [x] use build pattern for datamodel
-- [ ] build datamodel validator class / decorator
+- [x] build datamodel validator class / decorator
+- [ ] add search module for devices and subscribers ui
 - [ ] dynamic graph from kafka/topology
-- [x] add search module for devices and subscribers ui
 - [ ] build policy/rules engine prototype
 
 
 ### nice to have:
-- [ ] try to use custom decorator
+- [x] try to use custom decorator
+- [ ] fix logging instead of prints
 - [ ] add kafka setup 
 - [ ] create kafka topics if not present
-- [ ] fix logging instead of prints
 - [ ] add docker/podman build
 - [ ] add docker podman compose build
 
