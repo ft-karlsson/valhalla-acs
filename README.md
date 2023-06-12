@@ -1,6 +1,8 @@
 # new-acs (Working title: Valhalla ACS)
 Highly scalable and modular kafka-based ACS system built for cloud.
 
+NOTE: This is a school project, and is still in development face, exploring design solutions and concepts. NO CWMP handler implementet yet.
+
 ## Kafka as persistence / before starting ACS server
 install kafka: https://developer.confluent.io/faq/apache-kafka/install-and-run/#install-and-run-how-to-install-kafka
 
