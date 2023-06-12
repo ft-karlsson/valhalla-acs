@@ -1,11 +1,42 @@
-# valhalla-acs
+# new-acs (Working title: Valhalla ACS)
+Highly scalable and modular kafka-based ACS system built for cloud.
+
+## Kafka as persistence / before starting ACS server
+install kafka: https://developer.confluent.io/faq/apache-kafka/install-and-run/#install-and-run-how-to-install-kafka
+
+depending on your client - you can create the topics with following settings: 
+
+creating the topics: 
+```shell 
+kafka-topics --bootstrap-server localhost:9092 --create --topic acs_devices --replication-factor 1 --partitions 1 --config "cleanup.policy=compact" --config "delete.retention.ms=1209600000"  --config "segment.ms=50400000" --config "min.cleanable.dirty.ratio=0.01"
+```
 
 
-## Kafka as persistence
+```shell 
+kafka-topics --bootstrap-server localhost:9092 --create --topic acs_subscribers --replication-factor 1 --partitions 1 --config "cleanup.policy=compact" --config "delete.retention.ms=1209600000"  --config "segment.ms=50400000" --config "min.cleanable.dirty.ratio=0.01"
+```
+
+```shell 
+kafka-topics --bootstrap-server localhost:9092 --create --topic acs_device_policies --replication-factor 1 --partitions 1 --config "cleanup.policy=compact" --config "delete.retention.ms=1209600000"  --config "segment.ms=50400000" --config "min.cleanable.dirty.ratio=0.01"
+```
+
+
+Then you can produce to topics with messages like this (prompt):
+```shell
+kafka-console-producer --topic acs_subscribers --bootstrap-server localhost:9092 --property "parse.key=true" --property "key.separator=/"
+````
+
+```shell
+>su0112330/{"devices":[{"serialnumber":"SE1936018000231"}],"first_name":"Frederik","last_name":"Karlsson","products":[{"product_id":11}],"subscriber_id":"su0112330","type":"consumer"}
+```
+
+
 
 
 ## running locally
 prerequisite: python 3.11.3 or higher
+prerequisite: running kafka - see kafka as persistence
+
 
 
 ### create virtual env so not to disturb system python
@@ -64,7 +95,7 @@ sh ./tests/mock_boot_event.sh
 - [ ] fix logging instead of prints
 - [ ] add docker podman compose build
 - [ ] add kafka setup 
-- [ ] create kafka topics if not present
+- [ ] create kafka topics on startup if not present
 - [ ] add docker/podman build
 - [ ] topology graph persisted in kafka
 - [ ] build policy/rules engine prototype
